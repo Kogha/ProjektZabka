@@ -42,4 +42,3 @@ def load_data():
         print(f"Nieoczekiwany błąd: {e}")
     except Exception as e:
         print(f"Inny błąd: {type(e).__name__}: {e}")
-load_data()
