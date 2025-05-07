@@ -11,12 +11,12 @@ def load_data():
         while not products:
             products = fd.askopenfilename(
                 title='Wybierz bazę danych produktów',
-                initialdir='C:\\Users\\Kogha\\PycharmProjects\\Zabka\\database',
+                initialdir='C:\\',
                 filetypes=[('Pliki Excel', '*.xlsx')])
         while not customers:
             customers = fd.askopenfilename(
                 title='Wybierz bazę danych klientów',
-                initialdir='C:\\Users\\Kogha\\PycharmProjects\\Zabka\\database',
+                initialdir='C:\\',
                 filetypes=[('Pliki CSV', '*.csv')])
         file.write(products)
         file.write("\n")
