@@ -1,17 +1,6 @@
 from random import randint
-from Globals import DID
+from dostepneID import *
 from pandas import *
-
-
-#def IDistnieje(noweID):   
-    #filedata = read_csv("customers.csv")
-    #for i in filedata['ID'].values:
-        #if i == noweID:
-            #return True
-        #else:
-            #return False
-    
-
 
 def dodaj_uzytkownika(imie, nazwisko, email, haslo, ID):
     file = read_csv("customers.csv")
@@ -27,12 +16,3 @@ def rejestracja():
 
     generujID = randint(DID)
     dodaj_uzytkownika(imie, nazwisko, email, haslo, generujID)
-
-    #while True:
-        #generujID = randint(1000,9999)
-
-        #if IDistnieje(generujID) == False
-            #dodaj_uzytkownika(imie, nazwisko, email, haslo, generujID)
-            #break
-        #else:
-            #continue
