@@ -26,8 +26,9 @@ def load_data():
         with open("options.txt", "r") as f:
             lines = [Path(line.strip()) for line in f]
 
-        pd.read_excel(lines[0])
-        pd.read_csv(lines[1], encoding='cp1250')
+        products = pd.read_excel(lines[0])
+        customers = pd.read_csv(lines[1], encoding='cp1250')
+        return products, customers
     except FileNotFoundError as e:
         print(f"Nie znaleziono pliku: {e.filename}")
     except PermissionError as e:
