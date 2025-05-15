@@ -1,6 +1,7 @@
 from pandas import *
+from tkinter import *
 
-def Poprawne_dane(name, surname, password):
+def Poprawne_dane(name, surname, password, okno, popup1):
     data = read_csv('customers.csv')
     user_row = data[(data['Imię'] == name) & (data['Nazwisko'] == surname)]
 
@@ -9,18 +10,41 @@ def Poprawne_dane(name, surname, password):
         if correct_password == password:
             return True
         else:
-            print("Podane hasło jest nie prawidłowe. \n")
+            popup1.config(text="Podane hasło jest nie prawidłowe.")
             return False
     else:
-        print("Nie ma użytkownika o podanym imieniu i nazwisku. \n")
+        popup1.config(text="Nie ma użytkownika o podanym imieniu i nazwisku.")
         return False
 
-def Login():
-    name = input("Podaj imię: ")
-    surname = input("Podaj nazwisko: ")
-    password = input("Podaj hasło: ")
-
-    if Poprawne_dane(name, surname, password) == True:
-        print("Logowanie zakończone sukcesem. \n")
+def sprawdzanie_danych(name, surname, password, okno, popup2, popup1):
+    if Poprawne_dane(name, surname, password, okno, popup1) == True:
+        popup2.config(text="Logowanie zakończone sukcesem.")
+        okno.destroy()
     else:
-        print("Spróbuj ponownie. \n")
+        popup2.config(text="Spróbuj ponownie.")
+
+def Login():
+    okno = Tk(className = "login")
+    
+    Label(okno, text='Imie').grid(row=0)
+    Label(okno, text='Nazwisko').grid(row=1)
+    Label(okno, text='Haslo').grid(row=2)
+    popup1 = Label(okno, text='')
+    popup1.grid(row=3)
+    popup2 = Label(okno, text='')
+    popup2.grid(row=4)
+
+    popup1.pack()
+    popup2.pack()
+    
+    name = Entry(okno)
+    surname = Entry(okno)
+    password = Entry(okno)
+
+    Button(okno, text = "Zaloguj się", command = lambda: sprawdzanie_danych(name.get(), surname.get(), password.get(), okno, popup2, popup1)).grid(row = 5, column = 1)
+    
+    #name = input("Podaj imię: ")
+    #surname = input("Podaj nazwisko: ")
+    #password = input("Podaj hasło: ")
+
+    okno.mainloop()
