@@ -2,6 +2,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
 from load import load_data
+from load import get_database_path
 import re
 
 def database_module():
@@ -192,8 +193,7 @@ def database_module():
         entry.bind("<KeyRelease>", perform_search)
         dropdown.bind("<<ComboboxSelected>>", perform_search)
 
-    with open("options.txt", "r") as f:
-        lines = [line.strip() for line in f]
+    lines = get_database_path()
 
     tree_products = create_table(frame_products, products, "products")
     tree_customers = create_table(frame_customers, customers, "customers")
