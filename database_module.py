@@ -2,6 +2,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
 from load import load_data
+import re
 
 def database_module():
     products, customers = load_data()
@@ -20,20 +21,37 @@ def database_module():
     frame_customers = ttk.LabelFrame(root, text="Klienci")
     frame_customers.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT, padx=10, pady=10)
 
+    import pandas as pd
+    from tkinter import messagebox
+
     def sort_by_column(df, tree, column, sort_state):
-        ascending = sort_state.get(column, True)
+        ascending = not sort_state.get(column, True)
+        sort_state[column] = ascending
 
         try:
-            df[column] = pd.to_datetime(df[column], errors="raise")
-        except Exception:
-            pass
+            if pd.api.types.is_numeric_dtype(df[column]):
+                df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+            elif pd.api.types.is_datetime64_any_dtype(df[column]):
+                df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+            elif df[column].dtype == "O":
+                try:
+                    parsed = pd.to_datetime(df[column], format="%Y-%m-%d %H:%M:%S", errors="coerce")
+                    if parsed.notna().sum() >= 0.8:
+                        df[column] = parsed
+                        df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+                    else:
+                        raise ValueError
+                except:
+                    df["_sort_key"] = df[column].str.lower()
+                    df.sort_values(by="_sort_key", ascending=ascending, inplace=True, ignore_index=True)
+                    df.drop(columns=["_sort_key"], inplace=True)
+            else:
+                df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
 
-        try:
-            df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
-            sort_state[column] = not ascending
             insert_data(tree, df)
+
         except Exception as e:
-            messagebox.showerror("Błąd sortowania", f"Nie można posortować kolumny '{column}': {e}")
+            messagebox.showerror("Błąd sortowania", f"Nie udało się posortować: {e}")
 
     def create_table(frame, df, df_type):
         tree = ttk.Treeview(frame, columns=list(df.columns), show="headings", selectmode="browse")

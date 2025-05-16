@@ -68,3 +68,8 @@ def load_data():
 
 def reset_file_paths():
     Path("options.txt").unlink(missing_ok=True)
+
+def get_database_path():
+    with open("options.txt", "r") as f:
+        lines = [line.strip() for line in f]
+    return lines
