@@ -1,0 +1,2 @@
+C:/Users/kogha/PycharmProjects/ProjektZabka/products.xlsx
+C:/Users/kogha/PycharmProjects/ProjektZabka/gowno.csv
