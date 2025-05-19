@@ -3,8 +3,32 @@ from dostepneID import *
 from pandas import *
 from tkinter import *
 from load import *
+import re
 
-def dodaj_uzytkownika(customers, imie, nazwisko, email, haslo, ID, okno):
+def waliduj_dane(imie, nazwisko, email, haslo):
+    """
+    Walidacja danych podanych przez użytkownika.
+
+    Args:
+        imie (str): Imię użytkownika.
+        nazwisko (str): Nazwisko użytkownika.
+        email (str): Adres E-mail użytkownika.
+        haslo (str): Hasło użytkownika.
+    Returns:
+        None
+    """
+    if not imie.isalpha():
+        return "Imię powinno zawierać tylko litery."
+    if not nazwisko.isalpha():
+        return "Nazwisko powinno zawierać tylko litery."
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return "Niepoprawny adres e-mail."
+    if len(haslo) < 6:
+        return "Hasło powinno mieć co najmniej 6 znaków."
+    return None
+
+
+def dodaj_uzytkownika(customers, imie, nazwisko, email, haslo, ID, okno, etykieta_bledu):
     """
     Dodaje nowego użytkownika do bazy danych.
 
@@ -16,14 +40,20 @@ def dodaj_uzytkownika(customers, imie, nazwisko, email, haslo, ID, okno):
         haslo (str): Hasło użytkownika.
         ID (int): Unikalne ID użytkownika.
         okno (Tk): Instancja głównego okna aplikacji.
+        etykieta_bledu (TK): Label wyświetlający błąd przy podaniu błędnych danych
 
     Returns:
         None
     """
-    file = read_csv(customers)
-    nowy_uzytkownik = DataFrame([{"Imię": imie, "Nazwisko": nazwisko, "E-mail": email, "Hasło": haslo, "ID": ID}])
-    file = concat([file, nowy_uzytkownik], ignore_index=True)
-    file.to_csv(customers, index=False)
+    blad = waliduj_dane(imie, nazwisko, email, haslo)
+    if blad:
+        etykieta_bledu.config(text=f"Błąd: {blad}")
+        return
+    else:
+        file = read_csv(customers)
+        nowy_uzytkownik = DataFrame([{"Imię": imie, "Nazwisko": nazwisko, "E-mail": email, "Hasło": haslo, "ID": ID}])
+        file = concat([file, nowy_uzytkownik], ignore_index=True)
+        file.to_csv(customers, index=False)
     
     okno.destroy()
 
@@ -54,6 +84,9 @@ def rejestracja():
     nazwisko.grid(row=1, column=1)
     email.grid(row=2, column=1)
     haslo.grid(row=3, column=1)
+
+    etykieta_bledu = Label(okno, text="")
+    etykieta_bledu.grid(row=5, column=1)
 
     #imie = input("Podaj imie: ")
     #nazwisko = input("Podaj nazwisko: ")
