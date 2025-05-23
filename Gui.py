@@ -3,18 +3,6 @@ from PIL import Image, ImageTk
 from database_module import database_module
 
 ### Funkcje Administratora
-def add_product():
-    window = tk.Toplevel()
-    window.title("Dodaj produkt")
-    window.geometry("300x200")
-    tk.Label(window, text="Tutaj jest dodawanie produktów.").pack(pady=20)
-
-def remove_product():
-    window = tk.Toplevel()
-    window.title("Usuń produkt")
-    window.geometry("300x200")
-    tk.Label(window, text="Tutaj jest usuwanie produktów.").pack(pady=20)
-
 def register_customer():
     window = tk.Toplevel()
     window.title("Zarejestruj klienta")
@@ -27,12 +15,6 @@ def remove_customer():
     window.geometry("300x200")
     tk.Label(window, text="Tutaj jest usuwanie klienta.").pack(pady=20)
 
-def purchase_product():
-    window = tk.Toplevel()
-    window.title("Zakup produktu")
-    window.geometry("300x200")
-    tk.Label(window, text="Tutaj jest zakup produktu.").pack(pady=20)
-
 def admin_menu():
     window = tk.Toplevel()
     window.title("Menu Administratora")
@@ -40,10 +22,16 @@ def admin_menu():
     window.configure(bg="green")
 
     tk.Label(window, text="Menu Administratora Żabki", font=("Arial", 16), bg="#6DBE45", fg="white").pack(pady=20)
-
     tk.Button(window, text="Zarządzaj bazą danych", command=database_module, width=25).pack(pady=5)
+    tk.Button(window, text="Zarejestruj klienta", command=database_module, width=25).pack(pady=5)
+    tk.Button(window, text="Usuń klienta", command=database_module, width=25).pack(pady=5)
 
 ### Funkcje Klienta
+def add_product():
+    window = tk.Toplevel()
+    window.title("Zakup produktow")
+    window.geometry("300x200")
+    tk.Label(window, text="Tutaj jest dodawanie produktów.").pack(pady=20)
 def shop_offer():
     window = tk.Toplevel()
     window.title("Oferty sklepu")
@@ -76,6 +64,7 @@ def customer_menu():
 
     tk.Label(window, text="Witamy w Żabce", font=("Arial", 16), bg="green", fg="white").pack(pady=20)
 
+    tk.Button(window, text="Zakup produktów", command=shop_offer, width=25).pack(pady=5)
     tk.Button(window, text="Oferty sklepu", command=shop_offer, width=25).pack(pady=5)
     tk.Button(window, text="Menu sklepu", command=shop_menu, width=25).pack(pady=5)
     tk.Button(window, text="Strefa kuponów", command=coupon_zone, width=25).pack(pady=5)
