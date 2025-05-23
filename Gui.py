@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from database_module import database_module
 
 ### Funkcje Administratora
 def add_product():
@@ -40,11 +41,7 @@ def admin_menu():
 
     tk.Label(window, text="Menu Administratora Żabki", font=("Arial", 16), bg="#6DBE45", fg="white").pack(pady=20)
 
-    tk.Button(window, text="Dodaj produkt", command=add_product, width=25).pack(pady=5)
-    tk.Button(window, text="Usuń produkt", command=remove_product, width=25).pack(pady=5)
-    tk.Button(window, text="Dodaj klienta", command=register_customer, width=25).pack(pady=5)
-    tk.Button(window, text="Usuń klienta", command=remove_customer, width=25).pack(pady=5)
-    tk.Button(window, text="Zakup produktu", command=purchase_product, width=25).pack(pady=5)
+    tk.Button(window, text="Zarządzaj bazą danych", command=database_module, width=25).pack(pady=5)
 
 ### Funkcje Klienta
 def shop_offer():
