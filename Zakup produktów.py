@@ -2,23 +2,18 @@ import os
 
 DATABASE_DIR = "DATABASE"
 
-def rejestruj_klienta(client_id):
-    sciezka = os.path.join(DATABASE_DIR, client_id + ".txt")
-    if os.path.exists(sciezka):
-        print("Klient o ID " + client_id + " już istnieje.")
-    else:
-        with open(sciezka, "w") as plik:
-            plik.write("Zakupy klienta:\n")
-        print("Zarejestrowano klienta o ID: " + client_id)
-
 def zakup_produktu(client_id, produkt, ilosc):
-    sciezka = os.path.join(DATABASE_DIR, client_id + ".txt")
+    #Sprawdzenie czy można kupić produkt (czy jest wystarczająca ilość w bazie danych)
+    #Niech zapisuje więcej informacji: Data zakupu
+    #Odjęcie kupionych produktów od ich ilości z bazy danych
+    sciezka = os.path.join(DATABASE_DIR, str(client_id) + ".txt")
     if not os.path.exists(sciezka):
-        print("Błąd: klient o ID " + client_id + " nie istnieje. Najpierw zarejestruj klienta.")
-        return
+        f = open(sciezka, "x")
 
-    with open(sciezka, "a") as plik:
+    with open(sciezka, "a", encoding="utf-8") as plik:
         linia = "{}, ilość: {}\n".format(produkt, ilosc)
         plik.write(linia)
 
-    print("Zapisano zakup: " + produkt + ", ilość: " + str(ilosc) + " dla klienta " + client_id)
+    print("Zapisano zakup: " + produkt + ", ilość: " + str(ilosc) + " dla klienta " + str(client_id))
+
+#zakup_produktu(2137, "Sok multiwitamina", 4)

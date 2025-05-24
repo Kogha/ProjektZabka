@@ -1,9 +1,10 @@
 from pandas import *
+import load
 
 def dostepne_ID(DID):
-  filedata = read_csv("customers.csv")
+  lines = load.get_database_path()
+  filedata = read_csv(lines[1], encoding='cp1250')
   newDID = DID - set(filedata['ID'].values)
-  filedata.close()
   return newDID
 
 DID = set(range(1000,9999))

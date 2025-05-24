@@ -4,6 +4,7 @@ from pandas import *
 from tkinter import *
 from load import *
 import re
+import Gui
 
 def waliduj_dane(imie, nazwisko, email, haslo):
     """
@@ -50,12 +51,13 @@ def dodaj_uzytkownika(customers, imie, nazwisko, email, haslo, ID, okno, etykiet
         etykieta_bledu.config(text=f"Błąd: {blad}")
         return
     else:
-        file = read_csv(customers)
+        lines = get_database_path()
+        file = read_csv(lines[1], encoding='cp1250')
         nowy_uzytkownik = DataFrame([{"Imię": imie, "Nazwisko": nazwisko, "E-mail": email, "Hasło": haslo, "ID": ID}])
         file = concat([file, nowy_uzytkownik], ignore_index=True)
-        file.to_csv(customers, index=False)
-    
+        file.to_csv(customers, index=False, encoding="cp1250")
     okno.destroy()
+    Gui.customer_menu()
 
 def rejestracja():
     """
@@ -92,9 +94,11 @@ def rejestracja():
     #nazwisko = input("Podaj nazwisko: ")
     #email = input("Podaj e-mail: ")
     #haslo = input("Podaj haslo: ")
-
-    generujID = randint(DID)
+    generujID = 999
+    while generujID not in DID:
+        generujID = randint(list(DID)[0], list(DID)[-1])
     #dodaj_uzytkownika(imie, nazwisko, email, haslo, generujID)
-    Button(okno, text="Zarejestruj", command=lambda: dodaj_uzytkownika(customers, imie.get(), nazwisko.get(), email.get(), haslo.get(), generujID,okno)).grid(row=4, column=1)
+    Button(okno, text="Zarejestruj", command=lambda: dodaj_uzytkownika(customers, imie.get(), nazwisko.get(), email.get(), haslo.get(), generujID,okno, etykieta_bledu)).grid(row=4, column=1)
 
     okno.mainloop()
+#rejestracja()

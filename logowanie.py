@@ -80,3 +80,4 @@ def Login():
     #password = input("Podaj hasło: ")
 
     okno.mainloop()
+#Login()

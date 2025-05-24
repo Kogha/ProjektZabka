@@ -2,10 +2,11 @@ from tkinter import filedialog as fd
 import pandas as pd
 from pathlib import Path
 from tkinter import messagebox
+import os
 
 def load_data():
     plik = Path("options.txt")
-    if not plik.exists():
+    if not plik.exists() or os.stat(plik).st_size == 0:
         file = open("options.txt", "w")
         products = ""
         customers = ""
@@ -43,11 +44,11 @@ def load_data():
 
         if not REQUIRED_PRODUCT_COLUMNS.issubset(products.columns):
             messagebox.showerror("Błąd", "Plik produktów nie zawiera wymaganych kolumn.")
-            plik.unlink()
+            #plik.unlink()
             return load_data()
         if not REQUIRED_CUSTOMER_COLUMNS.issubset(customers.columns):
             messagebox.showerror("Błąd", "Plik klientów nie zawiera wymaganych kolumn.")
-            plik.unlink()
+            #plik.unlink()
             return load_data()
 
         return products, customers
@@ -59,8 +60,8 @@ def load_data():
         print("Plik jest pusty.")
     except pd.errors.ParserError:
         print("Błąd formatu danych w CSV.")
-    except UnicodeDecodeError:
-        print("Błąd kodowania pliku CSV. Spróbuj innego kodowania, np. cp1250.")
+    except UnicodeDecodeError as e:
+        print("Błąd kodowania pliku CSV. Spróbuj innego kodowania, np. cp1250.", e)
     except ValueError as e:
         print(f"Nieoczekiwany błąd: {e}")
     except Exception as e:
@@ -73,3 +74,5 @@ def get_database_path():
     with open("options.txt", "r") as f:
         lines = [line.strip() for line in f]
     return lines
+
+#load_data()

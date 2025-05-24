@@ -22,9 +22,6 @@ def database_module():
     frame_customers = ttk.LabelFrame(root, text="Klienci")
     frame_customers.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT, padx=10, pady=10)
 
-    import pandas as pd
-    from tkinter import messagebox
-
     def sort_by_column(df, tree, column, sort_state):
         ascending = not sort_state.get(column, True)
         sort_state[column] = ascending
@@ -216,4 +213,4 @@ def database_module():
 
     root.mainloop()
 
-database_module()
+#database_module()
