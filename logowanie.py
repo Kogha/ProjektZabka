@@ -2,82 +2,69 @@ from pandas import *
 from tkinter import *
 from load import *
 
-def Poprawne_dane(customers, name, surname, password, okno, popup1):
-    """
-    Sprawdza poprawność danych logowania.
+def Poprawne_dane(customers, name, surname, password, popup1):
+    try:
+        data = pd.read_csv(customers,encoding='cp1250')
+    except Exception as e:
+        popup1.config(text=f"Błąd pliku: {e}")
+        return False
 
-    Args:
-        customers (str): Ścieżka do pliku z danymi klientów.
-        name (str): Imię użytkownika.
-        surname (str): Nazwisko użytkownika.
-        password (str): Hasło użytkownika.
-        okno (Tk): Instancja głównego okna aplikacji.
-        popup1 (Label): Label do wyświetlania informacji o powodzie błędu logowania.
-
-    Returns:
-        bool: True, jeśli dane są poprawne, w przeciwnym razie False.
-    """
-    data = read_csv(customers)
     user_row = data[(data['Imię'] == name) & (data['Nazwisko'] == surname)]
 
     if not user_row.empty:
-        correct_password = user_row['Hasło'].values[0]
+        correct_password = user_row.iloc[0]['Hasło']
         if correct_password == password:
             return True
         else:
-            popup1.config(text="Podane hasło jest nie prawidłowe.")
+            popup1.config(text="Podane hasło jest nieprawidłowe.")
             return False
     else:
         popup1.config(text="Nie ma użytkownika o podanym imieniu i nazwisku.")
         return False
 
 def sprawdzanie_danych(customers, name, surname, password, okno, popup2, popup1):
-    """
-    Weryfikuje dane logowania i aktualizuje komunikaty na ekranie.
-
-    Args:
-        customers (str): Ścieżka do pliku z danymi klientów.
-        name (str): Imię użytkownika.
-        surname (str): Nazwisko użytkownika.
-        password (str): Hasło użytkownika.
-        okno (Tk): Instancja głównego okna aplikacji.
-        popup2 (Label): Label do wyświetlania głównego komunikatu o sukcesie lub błędzie logowania.
-        popup1 (Label): Label do wyświetlania informacji o powodzie błędu logowania.
-    """
-    if Poprawne_dane(customers, name, surname, password, okno, popup1) == True:
+    if Poprawne_dane(customers, name, surname, password, popup1):
         popup2.config(text="Logowanie zakończone sukcesem.")
-        okno.destroy()
+        okno.after(1000, okno.destroy)
     else:
         popup2.config(text="Spróbuj ponownie.")
 
 def Login():
-    """
-    Tworzy i uruchamia okno logowania.
-    """
-    okno = Tk(className = "login")
-    scieszki = list(get_database_path())
-    customers = scieszki[1]
-    
-    Label(okno, text='Imie').grid(row=0)
-    Label(okno, text='Nazwisko').grid(row=1)
-    Label(okno, text='Haslo').grid(row=2)
-    popup1 = Label(okno, text='')
-    popup1.grid(row=3)
-    popup2 = Label(okno, text='')
-    popup2.grid(row=4)
+    okno = Tk()
+    okno.title("Logowanie")
 
-    popup1.pack()
-    popup2.pack()
-    
-    name = Entry(okno)
-    surname = Entry(okno)
-    password = Entry(okno)
+    sciezki = list(get_database_path())
+    customers = sciezki[1]
 
-    Button(okno, text = "Zaloguj się", command = lambda: sprawdzanie_danych(customers, name.get(), surname.get(), password.get(), okno, popup2, popup1)).grid(row = 5, column = 1)
-    
-    #name = input("Podaj imię: ")
-    #surname = input("Podaj nazwisko: ")
-    #password = input("Podaj hasło: ")
+    Label(okno, text='Imię').grid(row=0, column=0)
+    Label(okno, text='Nazwisko').grid(row=1, column=0)
+    Label(okno, text='Hasło').grid(row=2, column=0)
+
+    name_entry = Entry(okno)
+    surname_entry = Entry(okno)
+    password_entry = Entry(okno, show='*')
+
+    name_entry.grid(row=0, column=1)
+    surname_entry.grid(row=1, column=1)
+    password_entry.grid(row=2, column=1)
+
+    popup1 = Label(okno, text='', fg='red')
+    popup1.grid(row=3, column=0, columnspan=2)
+
+    popup2 = Label(okno, text='', fg='blue')
+    popup2.grid(row=4, column=0, columnspan=2)
+
+    login_button = Button(okno, text="Zaloguj się", command=lambda: sprawdzanie_danych(
+        customers,
+        name_entry.get(),
+        surname_entry.get(),
+        password_entry.get(),
+        okno,
+        popup2,
+        popup1
+    ))
+    login_button.grid(row=5, column=1)
 
     okno.mainloop()
-#Login()
+
+Login()
