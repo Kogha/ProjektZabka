@@ -69,6 +69,7 @@ def load_data():
 
 def reset_file_paths():
     Path("options.txt").unlink(missing_ok=True)
+    load_data()
 
 def get_database_path():
     with open("options.txt", "r") as f:

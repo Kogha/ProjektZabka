@@ -56,10 +56,11 @@ def dodaj_uzytkownika(customers, imie, nazwisko, email, haslo, ID, okno, etykiet
         nowy_uzytkownik = DataFrame([{"Imię": imie, "Nazwisko": nazwisko, "E-mail": email, "Hasło": haslo, "ID": ID}])
         file = concat([file, nowy_uzytkownik], ignore_index=True)
         file.to_csv(customers, index=False, encoding="cp1250")
-    okno.destroy()
-    Gui.customer_menu()
+    okno.withdraw()
+    Gui.customer_menu(okno, ID)
 
-def rejestracja():
+
+def rejestracja(parent):
     """
     Tworzy i uruchamia okno rejestracji użytkownika.
 
@@ -71,7 +72,7 @@ def rejestracja():
     """
     scieszki = list(get_database_path())
     customers = scieszki[1]
-    okno = Tk(className = "rejestracja")
+    okno = Toplevel(parent)
     Label(okno, text='Imie').grid(row=0)
     Label(okno, text='Nazwisko').grid(row=1)
     Label(okno, text='E-mail').grid(row=2)
@@ -100,5 +101,9 @@ def rejestracja():
     #dodaj_uzytkownika(imie, nazwisko, email, haslo, generujID)
     Button(okno, text="Zarejestruj", command=lambda: dodaj_uzytkownika(customers, imie.get(), nazwisko.get(), email.get(), haslo.get(), generujID,okno, etykieta_bledu)).grid(row=4, column=1)
 
-    okno.mainloop()
+    def on_close():
+        parent.deiconify()
+        okno.destroy()
+
+    okno.protocol("WM_DELETE_WINDOW", on_close)
 #rejestracja()

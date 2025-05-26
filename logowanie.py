@@ -1,5 +1,7 @@
 from pandas import *
 from tkinter import *
+
+import Gui
 from load import *
 
 def Poprawne_dane(customers, name, surname, password, popup1):
@@ -14,7 +16,7 @@ def Poprawne_dane(customers, name, surname, password, popup1):
     if not user_row.empty:
         correct_password = user_row.iloc[0]['Hasło']
         if correct_password == password:
-            return True
+            return user_row.iloc[0]['ID']
         else:
             popup1.config(text="Podane hasło jest nieprawidłowe.")
             return False
@@ -23,14 +25,17 @@ def Poprawne_dane(customers, name, surname, password, popup1):
         return False
 
 def sprawdzanie_danych(customers, name, surname, password, okno, popup2, popup1):
-    if Poprawne_dane(customers, name, surname, password, popup1):
+    ID = Poprawne_dane(customers, name, surname, password, popup1)
+    if ID:
         popup2.config(text="Logowanie zakończone sukcesem.")
-        okno.after(1000, okno.destroy)
+        #okno.after(1000, okno.destroy)
+        okno.withdraw()
+        Gui.customer_menu(okno, ID)
     else:
         popup2.config(text="Spróbuj ponownie.")
 
-def Login():
-    okno = Tk()
+def Login(parent):
+    okno = Toplevel(parent)
     okno.title("Logowanie")
 
     sciezki = list(get_database_path())
@@ -65,6 +70,11 @@ def Login():
     ))
     login_button.grid(row=5, column=1)
 
-    okno.mainloop()
+    def on_close():
+        parent.deiconify()
+        okno.destroy()
 
-Login()
+    okno.protocol("WM_DELETE_WINDOW", on_close)
+    #okno.mainloop()
+
+#Login()

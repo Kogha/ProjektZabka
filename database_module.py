@@ -5,14 +5,16 @@ from load import load_data
 from load import get_database_path
 import re
 
-def database_module():
+def database_module(parent):
+    parent.withdraw()
+    root = tk.Toplevel(parent)
+
     products, customers = load_data()
     products_original = products.copy()
     customers_original = customers.copy()
 
     sort_states = {"products": {}, "customers": {}}
 
-    root = tk.Tk()
     root.title("Baza danych")
     root.geometry("1800x800")
 
@@ -211,6 +213,12 @@ def database_module():
     tk.Button(bottom_frame, text="💾 Zapisz zmiany", command=save_changes).pack(side=tk.LEFT, padx=20)
     tk.Button(bottom_frame, text="♻️ Przywróć zmiany", command=restore_data).pack(side=tk.LEFT, padx=20)
 
-    root.mainloop()
+    def on_close():
+        parent.deiconify()
+        root.destroy()
+
+    root.protocol("WM_DELETE_WINDOW", on_close)
+
+    #root.mainloop()
 
 #database_module()
