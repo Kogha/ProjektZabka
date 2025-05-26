@@ -5,6 +5,20 @@ import Gui
 from load import *
 
 def Poprawne_dane(customers, name, surname, password, popup1):
+    """
+    Sprawdza poprawność danych logowania.
+
+    Args:
+        customers (str): Ścieżka do pliku z danymi klientów.
+        name (str): Imię użytkownika.
+        surname (str): Nazwisko użytkownika.
+        password (str): Hasło użytkownika.
+        okno (Tk): Instancja głównego okna aplikacji.
+        popup1 (Label): Label do wyświetlania informacji o powodzie błędu logowania.
+
+    Returns:
+        bool: True, jeśli dane są poprawne, w przeciwnym razie False.
+    """
     try:
         data = pd.read_csv(customers,encoding='cp1250')
     except Exception as e:
@@ -25,6 +39,18 @@ def Poprawne_dane(customers, name, surname, password, popup1):
         return False
 
 def sprawdzanie_danych(customers, name, surname, password, okno, popup2, popup1):
+    """
+    Weryfikuje dane logowania i aktualizuje komunikaty na ekranie.
+
+    Args:
+        customers (str): Ścieżka do pliku z danymi klientów.
+        name (str): Imię użytkownika.
+        surname (str): Nazwisko użytkownika.
+        password (str): Hasło użytkownika.
+        okno (Tk): Instancja głównego okna aplikacji.
+        popup2 (Label): Label do wyświetlania głównego komunikatu o sukcesie lub błędzie logowania.
+        popup1 (Label): Label do wyświetlania informacji o powodzie błędu logowania.
+    """
     ID = Poprawne_dane(customers, name, surname, password, popup1)
     if ID:
         popup2.config(text="Logowanie zakończone sukcesem.")
@@ -35,6 +61,9 @@ def sprawdzanie_danych(customers, name, surname, password, okno, popup2, popup1)
         popup2.config(text="Spróbuj ponownie.")
 
 def Login(parent):
+    """
+    Tworzy i uruchamia okno logowania.
+    """
     okno = Toplevel(parent)
     okno.title("Logowanie")
 
@@ -71,6 +100,14 @@ def Login(parent):
     login_button.grid(row=5, column=1)
 
     def on_close():
+        """
+        Obsługuje zamknięcie okna aplikacji.
+
+        Funkcja przywraca okno główne aplikacji i niszczy okno logowania.
+
+        Returns:
+            None
+        """
         parent.deiconify()
         okno.destroy()
 
