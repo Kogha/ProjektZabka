@@ -6,6 +6,25 @@ from datetime import datetime
 DATABASE_DIR = "DATABASE"
 
 def zakup_produktu(client_id, produkt, ilosc):
+    """
+    Obsługuje proces zakupu produktu przez klienta.
+
+    Sprawdza dostępność produktu, aktualizuje bazę danych oraz zapisuje 
+    transakcję w pliku klienta.
+
+    Args:
+        client_id (int): Identyfikator klienta dokonującego zakupu.
+        produkt (str): Nazwa produktu do zakupu.
+        ilosc (int): Liczba sztuk produktu do zakupu.
+
+    Returns:
+        None
+
+    Raises:
+        ValueError: Jeśli żądana ilość przekracza dostępne zasoby.
+        IOError: Jeśli wystąpi błąd zapisu do pliku klienta.
+        Exception: Jeśli zapis do bazy danych nie powiedzie się.
+    """
     sciezka = os.path.join(DATABASE_DIR, str(client_id) + ".txt")
     lines = get_database_path()
     products = pd.read_excel(lines[0])
