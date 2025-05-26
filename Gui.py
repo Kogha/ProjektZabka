@@ -7,12 +7,21 @@ from load import reset_file_paths
 from shop_offer import pokaz_oferte_sklepu
 ### Funkcje Administratora
 def purchase_product():
+    """
+    Funkcja tworzy okno zakupu produktów.
+    """
     window = tk.Toplevel()
     window.title("Zakup produktu")
     window.geometry("300x200")
     tk.Label(window, text="Tutaj jest zakup produktu.").pack(pady=20)
 
 def admin_menu(parent):
+    """
+    Funkcja toworzy okno administracyjne.
+
+    Args:
+        parent (tk): poprzednie okno wyboru.
+    """
     parent.withdraw()
 
     window = tk.Toplevel()
@@ -25,6 +34,14 @@ def admin_menu(parent):
     tk.Button(window, text="Wybierz inne pliki z bazami danych", command=reset_file_paths, width=25).pack(pady=5)
 
     def on_close():
+        """
+        Obsługuje zamknięcie okna aplikacji.
+
+        Funkcja przywraca okno główne aplikacji i niszczy okno logowania.
+    
+        Returns:
+            None
+        """
         parent.deiconify()
         window.destroy()
 
@@ -32,30 +49,49 @@ def admin_menu(parent):
 
 ### Funkcje Klienta
 def shop_offer():
+    """
+    Funkcja tworzy okno ofert sklepu.
+    """
     window = tk.Toplevel()
     window.title("Oferty sklepu")
     window.geometry("300x200")
     tk.Label(window, text="Tutaj są oferty sklepu Żabka.").pack(pady=20)
 
 def shop_menu():
+    """
+    Funkcja tworzy okno menu sklepu.
+    """
     window = tk.Toplevel()
     window.title("Menu sklepu")
     window.geometry("300x200")
     tk.Label(window, text="Tutaj jest menu sklepu Żabka.").pack(pady=20)
 
 def coupon_zone():
+    """
+    Funkcja tworzy okno strefy kuponów.
+    """
     window = tk.Toplevel()
     window.title("Strefa kuponów")
     window.geometry("300x200")
     tk.Label(window, text="Tutaj znajdziesz kupony.").pack(pady=20)
 
 def anything_for_zapps():
+    """
+    Funkcja tworzy okno ofert specjalnych związanych z punktami (żappsony).
+    """
     window = tk.Toplevel()
     window.title("Wszystko za żappsony")
     window.geometry("300x200")
     tk.Label(window, text="Tutaj możesz wydać żappsony!").pack(pady=20)
 
 def customer_menu(parent, id):
+    """
+    Funkcja tworzy okno główne klienta.
+    
+    Args:
+        parent (tk): poprzednie okno wyboru.
+        id (int): id użytkownika.
+    """
     window = tk.Toplevel(parent)
     window.title("Menu Klienta")
     window.geometry("400x600")
@@ -69,12 +105,26 @@ def customer_menu(parent, id):
     #tk.Button(window, text="Wszystko za żappsony", command=anything_for_zapps, width=25).pack(pady=5)
 
     def on_close():
+        """
+        Obsługuje zamknięcie okna aplikacji.
+
+        Funkcja przywraca okno główne aplikacji i niszczy okno logowania.
+
+        Returns:
+            None
+        """
         parent.deiconify()
         window.destroy()
 
     window.protocol("WM_DELETE_WINDOW", on_close)
 
 def customer_options(parent):
+    """
+    Funkcja tworzy okno wyboru pomiędzy rejestracją użytkownika lub zalogowaniem się do już utworzonego konta.
+
+    Args:
+        parent (tk): poprzednie okno wyboru.
+    """
     parent.withdraw()
 
     window = tk.Toplevel()
@@ -87,6 +137,14 @@ def customer_options(parent):
     tk.Button(window, text="Logowanie", command=lambda: (window.withdraw(),Login(window)), width=25).pack(pady=5)
 
     def on_close():
+        """
+        Obsługuje zamknięcie okna aplikacji.
+
+        Funkcja przywraca okno główne aplikacji i niszczy okno logowania.
+    
+        Returns:
+            None
+        """
         parent.deiconify()
         window.destroy()
 
@@ -94,6 +152,9 @@ def customer_options(parent):
 
 ###Start menu
 def start_screen():
+    """
+    Funkcja tworząca okno główne (startowe) programu.
+    """
     root = tk.Tk()
     root.title("Wybierz Tryb")
     root.geometry("1000x1000")
@@ -111,4 +172,7 @@ def start_screen():
     root.mainloop()
 
 def start_Gui():
+    """
+    Funkcja uruchamiająca okno główne programu.
+    """
     start_screen()
