@@ -5,6 +5,13 @@ from load import load_data
 from load import get_database_path
 import re
 
+def log_call(func):
+    def wrapper(*args, **kwargs):
+        print(f"Wywołano funkcję: {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
+
 def database_module(parent):
     
     parent.withdraw()
@@ -137,6 +144,7 @@ def database_module(parent):
         df.drop(df.index[index], inplace=True)
         df.reset_index(drop=True, inplace=True)
 
+    @log_call
     def save_changes():
         """
         Zapisuje zmiany w plikach danych.
