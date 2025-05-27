@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 from load import load_data
 from Zakup_produktow import zakup_produktu
+import pandas as pd
 
 def pokaz_oferte_sklepu(parent, client_id):
     """
@@ -24,6 +25,8 @@ def pokaz_oferte_sklepu(parent, client_id):
     frame = ttk.LabelFrame(root, text="Produkty dostępne w sklepie")
     frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
+    sort_states = {"products": {}, "customers": {}}
+
     products, _ = load_data()
     sort_state = {}
 
@@ -44,34 +47,55 @@ def pokaz_oferte_sklepu(parent, client_id):
         for _, row in df.iterrows():
             tree.insert("", tk.END, values=list(row))
 
-    def sort_by_column(df, tree, column):
+    def sort_by_column(df, tree, column, sort_state):
         """
         Sortuje dane według wybranej kolumny i aktualizuje widok tabeli.
 
-        Odwraca bieżący stan sortowania dla wskazanej kolumny i ponownie
-        renderuje tabelę.
-    
+        Obsługuje różne typy danych, w tym liczby, daty i tekst.
+        Jeśli kolumna zawiera mieszane typy, podejmuje próbę konwersji.
+
         Args:
             df (pandas.DataFrame): Dane przechowywane w tabeli.
-            tree (ttk.Treeview): Widżet Treeview zawierający dane.
+            tree (ttk.Treeview): Widżet tabeli zawierający dane.
             column (str): Nazwa kolumny, według której należy sortować.
-    
+            sort_state (dict): Słownik przechowujący stan sortowania dla każdej kolumny.
+
         Returns:
             None
-    
+
         Raises:
+            ValueError: Jeśli konwersja danych nie powiedzie się.
             Exception: Jeśli sortowanie nie powiedzie się.
         """
         ascending = not sort_state.get(column, True)
         sort_state[column] = ascending
 
         try:
-            df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+            if pd.api.types.is_numeric_dtype(df[column]):
+                df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+            elif pd.api.types.is_datetime64_any_dtype(df[column]):
+                df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+            elif df[column].dtype == "O":
+                try:
+                    parsed = pd.to_datetime(df[column], format="%Y-%m-%d %H:%M:%S", errors="coerce")
+                    if parsed.notna().sum() >= 0.8:
+                        df[column] = parsed
+                        df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+                    else:
+                        raise ValueError
+                except:
+                    df["_sort_key"] = df[column].str.lower()
+                    df.sort_values(by="_sort_key", ascending=ascending, inplace=True, ignore_index=True)
+                    df.drop(columns=["_sort_key"], inplace=True)
+            else:
+                df.sort_values(by=column, ascending=ascending, inplace=True, ignore_index=True)
+
             insert_data(tree, df)
+
         except Exception as e:
             messagebox.showerror("Błąd sortowania", f"Nie udało się posortować: {e}")
 
-    def create_table(frame, df):
+    def create_table(frame, df, df_type):
         """
         Tworzy tabelę z danymi produktów w określonym kontenerze.
 
@@ -86,7 +110,7 @@ def pokaz_oferte_sklepu(parent, client_id):
         """
         tree = ttk.Treeview(frame, columns=list(df.columns), show="headings")
         for col in df.columns:
-            tree.heading(col, text=col, command=lambda c=col: sort_by_column(df, tree, c))
+            tree.heading(col, text=col, command=lambda c=col: sort_by_column(df, tree, c, sort_states[df_type]))
             tree.column(col, width=120, anchor=tk.CENTER)
         insert_data(tree, df)
         tree.pack(fill=tk.BOTH, expand=True)
@@ -150,7 +174,7 @@ def pokaz_oferte_sklepu(parent, client_id):
         entry.bind("<KeyRelease>", perform_search)
         dropdown.bind("<<ComboboxSelected>>", perform_search)
 
-    tree = create_table(frame, products)
+    tree = create_table(frame, products, "products")
     add_search_bar(frame, products, tree, products.columns)
 
     # Funkcja zakupu
