@@ -122,30 +122,30 @@ def pokaz_oferte_sklepu(parent, client_id):
         dropdown = ttk.Combobox(search_frame, textvariable=selected_col, values=list(columns), state="readonly")
         dropdown.pack(side=tk.LEFT, padx=5)
 
-    def perform_search(*args):
-        """
-        Wykonuje wyszukiwanie na podstawie przekazanego tekstu.
+        def perform_search(*args):
+            """
+            Wykonuje wyszukiwanie na podstawie przekazanego tekstu.
 
-        Pobiera argumenty przekazane przez użytkownika i dopasowuje je 
-        do dostępnych produktów. Aktualizuje widżet `tree` na podstawie 
-        wyników wyszukiwania.
-        
-        Args:
-            *args: Dynamiczna lista argumentów obejmująca frazę wyszukiwania 
-                    oraz opcjonalnie wybrane kolumny do filtrowania.
-        
-        Returns:
-            None
-        """
-        query = search_var.get().strip().lower()
-        col = selected_col.get()
+            Pobiera argumenty przekazane przez użytkownika i dopasowuje je
+            do dostępnych produktów. Aktualizuje widżet `tree` na podstawie
+            wyników wyszukiwania.
 
-        if not query:
-            filtered_df = df
-        else:
-            filtered_df = df[df[col].astype(str).str.lower().str.contains(query)]
+            Args:
+                *args: Dynamiczna lista argumentów obejmująca frazę wyszukiwania
+                        oraz opcjonalnie wybrane kolumny do filtrowania.
 
-        insert_data(tree, filtered_df)
+            Returns:
+                None
+            """
+            query = search_var.get().strip().lower()
+            col = selected_col.get()
+
+            if not query:
+                filtered_df = df
+            else:
+                filtered_df = df[df[col].astype(str).str.lower().str.contains(query)]
+
+            insert_data(tree, filtered_df)
 
         entry.bind("<KeyRelease>", perform_search)
         dropdown.bind("<<ComboboxSelected>>", perform_search)
@@ -203,6 +203,9 @@ def pokaz_oferte_sklepu(parent, client_id):
         try:
             zakup_produktu(client_id, produkt["Nazwa"], ilosc)
             messagebox.showinfo("Sukces", f"Kupiono {ilosc} x {produkt['Nazwa']}")
+            products.at[index, "Ilość"] -= ilosc
+            insert_data(tree, products)
+
         except Exception as e:
             messagebox.showerror("Błąd zakupu", str(e))
 

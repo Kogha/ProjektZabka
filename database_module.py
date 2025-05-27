@@ -199,29 +199,29 @@ def database_module(parent):
             entry.grid(row=i, column=1, padx=5, pady=2)
             entries[col] = entry
 
-    def add_entry():
-        """
-        Dodaje nowy wpis do tabeli.
+        def add_entry():
+            """
+            Dodaje nowy wpis do tabeli.
 
-        Pobiera wartości z pól wejściowych, tworzy nowy wiersz w DataFrame 
-        i aktualizuje widok tabeli.
-    
-        Returns:
-            None
-    
-        Raises:
-            ValueError: Jeśli użytkownik nie wypełni wszystkich pól.
-        """
-        new_row = {col: entries[col].get() for col in columns}
-        if any(val == "" for val in new_row.values()):
-            messagebox.showwarning("Brak danych", "Wypełnij wszystkie pola.")
-            return
-        df.loc[len(df)] = list(new_row.values())
-        insert_data(tree, df)
-        popup.destroy()
+            Pobiera wartości z pól wejściowych, tworzy nowy wiersz w DataFrame
+            i aktualizuje widok tabeli.
 
-        add_button = tk.Button(popup, text="Dodaj", command=add_entry)
-        add_button.grid(row=len(columns), column=0, columnspan=2, pady=10)
+            Returns:
+                None
+
+            Raises:
+                ValueError: Jeśli użytkownik nie wypełni wszystkich pól.
+            """
+            new_row = {col: entries[col].get() for col in columns}
+            if any(val == "" for val in new_row.values()):
+                messagebox.showwarning("Brak danych", "Wypełnij wszystkie pola.")
+                return
+            df.loc[len(df)] = list(new_row.values())
+            insert_data(tree, df)
+            popup.destroy()
+
+            add_button = tk.Button(popup, text="Dodaj", command=add_entry)
+            add_button.grid(row=len(columns), column=0, columnspan=2, pady=10)
 
     def open_edit_window(columns, df, tree, title):
         """
@@ -329,29 +329,29 @@ def database_module(parent):
         dropdown = ttk.Combobox(search_frame, textvariable=selected_col, values=list(columns), state="readonly")
         dropdown.pack(side=tk.LEFT, padx=5)
 
-    def perform_search(*args):
-        """
-        Wykonuje wyszukiwanie na podstawie przekazanego tekstu.
+        def perform_search(*args):
+            """
+            Wykonuje wyszukiwanie na podstawie przekazanego tekstu.
 
-        Pobiera argumenty przekazane przez użytkownika i dopasowuje je 
-        do dostępnych danych. Aktualizuje widżet `tree` na podstawie wyników wyszukiwania.
-        
-        Args:
-            *args: Dynamiczna lista argumentów obejmująca frazę wyszukiwania 
-                    oraz opcjonalnie wybrane kolumny do filtrowania.
-        
-        Returns:
-            None
-        """
-        query = search_var.get().strip().lower()
-        col = selected_col.get()
+            Pobiera argumenty przekazane przez użytkownika i dopasowuje je
+            do dostępnych danych. Aktualizuje widżet `tree` na podstawie wyników wyszukiwania.
 
-        if not query:
-            filtered_df = df
-        else:
-            filtered_df = df[df[col].astype(str).str.lower().str.contains(query)]
+            Args:
+                *args: Dynamiczna lista argumentów obejmująca frazę wyszukiwania
+                        oraz opcjonalnie wybrane kolumny do filtrowania.
 
-        insert_data(tree, filtered_df)
+            Returns:
+                None
+            """
+            query = search_var.get().strip().lower()
+            col = selected_col.get()
+
+            if not query:
+                filtered_df = df
+            else:
+                filtered_df = df[df[col].astype(str).str.lower().str.contains(query)]
+
+            insert_data(tree, filtered_df)
 
         entry.bind("<KeyRelease>", perform_search)
         dropdown.bind("<<ComboboxSelected>>", perform_search)
