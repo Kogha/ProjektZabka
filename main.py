@@ -1,4 +1,5 @@
 import load
+load.load_data()
 from Gui import start_Gui
 
 if __name__ == "__main__":
