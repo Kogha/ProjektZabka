@@ -73,6 +73,8 @@ def rejestracja(parent):
     scieszki = list(get_database_path())
     customers = scieszki[1]
     okno = Toplevel(parent)
+    okno.title("Rejestracja")
+    okno.geometry("300x200")
     Label(okno, text='Imie').grid(row=0)
     Label(okno, text='Nazwisko').grid(row=1)
     Label(okno, text='E-mail').grid(row=2)

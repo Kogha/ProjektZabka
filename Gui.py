@@ -26,8 +26,14 @@ def admin_menu(parent):
 
     window = tk.Toplevel()
     window.title("Menu Administratora")
-    window.geometry("400x600")
+    window.geometry("550x600")
     window.configure(bg="green")
+    img = Image.open("Zabka1.png")
+    img = img.resize((120, 80))
+    photo = ImageTk.PhotoImage(img)
+    img_label = tk.Label(window, image=photo, bg="green")
+    img_label.image = photo
+    img_label.place(x=10, y=10)
 
     tk.Label(window, text="Menu Administratora Żabki", font=("Arial", 16), bg="#6DBE45", fg="white").pack(pady=20)
     tk.Button(window, text="Zarządzaj bazą danych", command=lambda: database_module(window), width=25).pack(pady=5)
@@ -129,8 +135,14 @@ def customer_options(parent):
 
     window = tk.Toplevel()
     window.title("Menu Klienta")
-    window.geometry("400x600")
+    window.geometry("550x600")
     window.configure(bg="green")
+    img = Image.open("Zabka1.png")
+    img = img.resize((120, 80))
+    photo = ImageTk.PhotoImage(img)
+    img_label = tk.Label(window, image=photo, bg="green")
+    img_label.image = photo
+    img_label.place(x=10, y=10)
 
     tk.Label(window, text="Witamy w Żabce", font=("Arial", 16), bg="green", fg="white").pack(pady=20)
     tk.Button(window, text="Rejestracja", command=lambda: (window.withdraw(), rejestracja(window)), width=25).pack(pady=5)

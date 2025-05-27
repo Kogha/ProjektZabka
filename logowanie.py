@@ -66,6 +66,7 @@ def Login(parent):
     """
     okno = Toplevel(parent)
     okno.title("Logowanie")
+    okno.geometry("300x200")
 
     sciezki = list(get_database_path())
     customers = sciezki[1]
